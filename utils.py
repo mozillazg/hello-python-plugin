@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """
     werkzeug.utils
     ~~~~~~~~~~~~~~
@@ -10,6 +11,11 @@
     :copyright: (c) 2013 by the Werkzeug Team, see AUTHORS for more details.
     :license: BSD, see LICENSE for more details.
 """
+
+"""
+修改自 https://github.com/mitsuhiko/werkzeug/blob/master/werkzeug/utils.py
+"""
+
 import re
 import sys
 import pkgutil
@@ -65,7 +71,8 @@ def import_string(import_name, silent=False):
                 sys.exc_info()[2])
 
 
-def find_modules(import_path, include_packages=False, recursive=False):
+def find_modules(import_path, include_packages=False,
+                 recursive=False, silent=False):
     """Find all the modules below a package.  This can be useful to
     automatically import all views / controllers so that their metaclasses /
     function decorators have a chance to register themselves on the
@@ -78,12 +85,17 @@ def find_modules(import_path, include_packages=False, recursive=False):
     :param import_name: the dotted name for the package to find child modules.
     :param include_packages: set to `True` if packages should be returned, too.
     :param recursive: set to `True` if recursion should happen.
+    :param silent: if set to `True` import errors are ignored.
     :return: generator
     """
-    module = import_string(import_path)
+    module = import_string(import_path, silent)
     path = getattr(module, '__path__', None)
     if path is None:
-        raise ValueError('%r is not a package' % import_path)
+        if silent:
+            return
+            yield
+        else:
+            raise ValueError('%r is not a package' % import_path)
     basename = module.__name__ + '.'
     for importer, modname, ispkg in pkgutil.iter_modules(path):
         modname = basename + modname
