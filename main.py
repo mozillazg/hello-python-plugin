@@ -19,12 +19,16 @@ def main():
     text = 'test plugin.'
     print 'Default: %s' % text
 
+    # 找出插件目录下所有的插件
     modules = find_modules('plugins', silent=True)
     for module in modules:
         enabled_plugins = ['plugins.' + x for x in args.plugins]
+        # 根据命令行选项 --enable 的值过滤插件
         if module in enabled_plugins:
+            # 导入插件
             plugin = import_string(module, silent=True)
             if plugin:
+                # 执行约定的每个插件内必须有的函数
                 print plugin.output(text)
 
 if __name__ == '__main__':

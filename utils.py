@@ -16,14 +16,8 @@
 修改自 https://github.com/mitsuhiko/werkzeug/blob/master/werkzeug/utils.py
 """
 
-import re
 import sys
 import pkgutil
-
-
-_format_re = re.compile(r'\$(?:(%s)|\{(%s)\})' % (('[a-zA-Z_][a-zA-Z0-9_]*',
-                                                   ) * 2))
-_entity_re = re.compile(r'&([^;]+);')
 
 
 def reraise(tp, value, tb=None):
