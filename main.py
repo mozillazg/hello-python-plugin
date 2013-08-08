@@ -19,12 +19,13 @@ def main():
     text = 'test plugin.'
     print 'Default: %s' % text
 
-    modules = find_modules('plugins')
+    modules = find_modules('plugins', silent=True)
     for module in modules:
         enabled_plugins = ['plugins.' + x for x in args.plugins]
         if module in enabled_plugins:
-            plugin = import_string(module)
-            print plugin.output(text)
+            plugin = import_string(module, silent=True)
+            if plugin:
+                print plugin.output(text)
 
 if __name__ == '__main__':
     main()
